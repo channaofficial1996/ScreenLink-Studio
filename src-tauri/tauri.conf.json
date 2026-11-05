@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ScreenLink Studio",
+  "version": "1.0.0",
+  "identifier": "com.screenlink.studio",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "main",
+        "title": "ScreenLink Studio",
+        "width": 1320,
+        "height": 860,
+        "minWidth": 1040,
+        "minHeight": 680,
+        "visible": false,
+        "backgroundColor": "#0a0f1f",
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": {
+        "default-src": "'self'",
+        "script-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'",
+        "font-src": "'self'",
+        "img-src": "'self' asset: http://asset.localhost data: blob:",
+        "media-src": "'self' asset: http://asset.localhost blob:",
+        "connect-src": "'self' ipc: http://ipc.localhost ws://127.0.0.1:*"
+      },
+      "assetProtocol": {
+        "enable": true,
+        "scope": []
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMxOTBBQjIxQjdFREVGNjEKUldSaDcrMjNJYXVRTWRnQVgwaFhibmRMRkFkMWRRVTYxRVdKbmQ5YitnalhTVmJFY2ZkUUxTSlcK",
+      "endpoints": [
+        "https://github.com/channaofficial1996/ScreenLink-Studio/releases/latest/download/latest.json"
+      ],
+      "windows": { "installMode": "passive" }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": ["nsis", "msi", "dmg", "app"],
+    "publisher": "ScreenLink Studio",
+    "category": "Utility",
+    "shortDescription": "Mirror your phone to your computer over USB",
+    "longDescription": "ScreenLink Studio mirrors Android and Apple devices to your Windows or macOS computer over USB, with low-latency embedded video, mouse and keyboard control for Android, screen recording and screenshots.",
+    "copyright": "Copyright (c) 2026 ScreenLink Studio",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "resources/scrcpy-server": "resources/scrcpy-server",
+      "resources/platform-tools/*": "resources/platform-tools/",
+      "licenses/scrcpy-LICENSE.txt": "licenses/scrcpy-LICENSE.txt"
+    },
+    "windows": {
+      "webviewInstallMode": { "type": "downloadBootstrapper" },
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/icon.ico",
+        "headerImage": "installer/nsis-header.bmp",
+        "sidebarImage": "installer/nsis-sidebar.bmp"
+      },
+      "wix": {
+        "bannerPath": "installer/wix-banner.bmp",
+        "dialogImagePath": "installer/wix-dialog.bmp"
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "12.0",
+      "entitlements": "macos.entitlements",
+      "dmg": {
+        "windowSize": { "width": 660, "height": 400 }
+      }
+    }
+  }
+}

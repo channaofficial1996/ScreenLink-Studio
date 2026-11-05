@@ -1,0 +1,8 @@
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/schemas/
+# Downloaded by `npm run setup`; never committed.
+src-tauri/resources/scrcpy-server
+src-tauri/resources/platform-tools/
+*.log

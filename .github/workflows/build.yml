@@ -1,0 +1,47 @@
+name: Release
+
+# Manual only, and it needs the TAURI_SIGNING_PRIVATE_KEY repository secret (see docs/RELEASING.md).
+# Windows releases are normally published from the development PC by scripts/release-windows.mjs.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            sidecars: win
+            args: ""
+          - os: macos-latest
+            sidecars: mac
+            args: --target universal-apple-darwin
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.os == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - run: npm ci
+      - run: node scripts/fetch-sidecars.mjs --platform=${{ matrix.sidecars }}
+      - run: npm test
+      - run: cargo test --manifest-path src-tauri/Cargo.toml --lib
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+        with:
+          tagName: v__VERSION__
+          releaseName: ScreenLink Studio v__VERSION__
+          releaseBody: Download the installer for your system below. Installed copies update themselves.
+          releaseDraft: false
+          args: ${{ matrix.args }}
